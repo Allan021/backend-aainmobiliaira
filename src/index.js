@@ -67,23 +67,8 @@ const loteController = new LoteController(loteUseCases);
 const app = express();
 
 
-const allowedOrigins = env.frontendUrl
-  ? env.frontendUrl.split(',').map(url => url.trim())
-  : ['http://localhost:4321'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Permitir peticiones sin origen (como Postman, mobile apps o curl)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error(`CORS Error: Origin ${origin} not allowed`), false);
-    }
-  },
-  credentials: true
-}));
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 
