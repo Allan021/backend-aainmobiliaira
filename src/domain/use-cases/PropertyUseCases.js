@@ -19,12 +19,18 @@ class PropertyUseCases {
     return this.propertyRepo.create(data);
   }
 
-  async publishToFacebook(id) {
+  async publishToFacebook(id, overrides = {}) {
     if (!this.facebook) return { skipped: true, reason: 'Facebook not configured' };
     const property = await this.propertyRepo.findById(id);
     if (!property) throw Object.assign(new Error('Propiedad no encontrada'), { status: 404 });
     if (property.status !== 'disponible') return { skipped: true, reason: 'Not disponible' };
-    const result = await this.facebook.postProperty(property);
+
+    // Merge facebook-only fields from the request (not stored in DB)
+    const fbData = { ...property };
+    if (overrides.facebook_title) fbData.facebook_title = overrides.facebook_title;
+    if (overrides.facebook_description) fbData.facebook_description = overrides.facebook_description;
+
+    const result = await this.facebook.postProperty(fbData);
     if (result?.id) {
       await this.propertyRepo.saveFbPostId(id, result.id).catch(() => {});
     }
@@ -35,10 +41,15 @@ class PropertyUseCases {
     const before = await this.propertyRepo.findById(id).catch(() => null);
     const property = await this.propertyRepo.update(id, data);
 
+    // Merge facebook-only fields (not persisted in DB) for the Facebook service
+    const fbOverrides = {};
+    if (data.facebook_title) fbOverrides.facebook_title = data.facebook_title;
+    if (data.facebook_description) fbOverrides.facebook_description = data.facebook_description;
+
     if (this.facebook && before && before.status !== property.status) {
       if (property.status === 'disponible') {
         const full = await this.propertyRepo.findById(id).catch(() => property);
-        this.facebook.postProperty(full).then(result => {
+        this.facebook.postProperty({ ...full, ...fbOverrides }).then(result => {
           if (result?.id) this.propertyRepo.saveFbPostId(id, result.id).catch(() => {});
         }).catch(err => console.error('[Facebook] Post failed:', err.message));
       } else if (property.status === 'vendido') {
@@ -49,6 +60,7 @@ class PropertyUseCases {
     }
 
     return property;
+
   }
 
   async delete(id) {

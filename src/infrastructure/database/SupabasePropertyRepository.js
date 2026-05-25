@@ -33,7 +33,7 @@ class SupabasePropertyRepository extends PropertyRepository {
   }
 
   async create(propertyData) {
-    const { images, ...data } = propertyData;
+    const { images, facebook_title, facebook_description, ...data } = propertyData;
 
     const { data: property, error } = await supabase
       .from('properties')
@@ -60,7 +60,7 @@ class SupabasePropertyRepository extends PropertyRepository {
   }
 
   async update(id, updates) {
-    const { images, ...data } = updates;
+    const { images, facebook_title, facebook_description, ...data } = updates;
 
     const { data: property, error } = await supabase
       .from('properties')

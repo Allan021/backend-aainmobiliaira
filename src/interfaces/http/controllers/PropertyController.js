@@ -56,7 +56,7 @@ class PropertyController {
 
   publishToFacebook = async (req, res, next) => {
     try {
-      const result = await this.properties.publishToFacebook(req.params.id);
+      const result = await this.properties.publishToFacebook(req.params.id, req.body);
       res.json(result);
     } catch (err) { next(err); }
   };
