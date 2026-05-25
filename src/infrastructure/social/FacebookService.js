@@ -37,7 +37,10 @@ class FacebookService {
     const area = property.area_varas ? `${property.area_varas} varas²` : null;
     const location = [property.municipio, property.departamento].filter(Boolean).join(', ');
 
-    const lines = [`${emoji} Nueva Propiedad Disponible`, ``, property.title];
+    // Use facebook_title if provided, else fall back to default header format
+    const title = property.facebook_title || property.title;
+    const lines = [`${emoji} Nueva Propiedad Disponible`, ``, title];
+    
     if (location) lines.push(`📍 ${location}`);
     if (price) lines.push(`💰 ${price}`);
     if (area) lines.push(`📐 ${area}`);
@@ -51,6 +54,12 @@ class FacebookService {
       if (fin.length) lines.push(`   ${fin.join(' · ')}`);
     }
 
+    // Append facebook_description if provided, else fall back to web description
+    const desc = property.facebook_description || property.description;
+    if (desc) {
+      lines.push(``, desc);
+    }
+
     const waText = encodeURIComponent(
       `Hola, me interesa la propiedad: "${property.title}"` +
       (location ? ` en ${location}` : '') +
@@ -61,7 +70,7 @@ class FacebookService {
 
     lines.push(
       ``,
-      `Ver propiedad: http://aabienes.com/propiedad/${property.id}`,
+      `Ver propiedad: https://www.aabienes.com/propiedad/${property.id}`,
       ``,
       `¿Interesado? Escríbenos por WhatsApp:`,
       waLink,

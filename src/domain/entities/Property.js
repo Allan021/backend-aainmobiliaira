@@ -21,6 +21,9 @@ class Property {
     financing_prima,
     financing_plazo_meses,
     financing_tasa_anual,
+    map_url,
+    facebook_title,
+    facebook_description,
     created_at,
     updated_at,
   }) {
@@ -45,6 +48,9 @@ class Property {
     this.financingPrima = financing_prima;
     this.financingPlazoMeses = financing_plazo_meses;
     this.financingTasaAnual = financing_tasa_anual;
+    this.map_url = map_url;
+    this.facebook_title = facebook_title;
+    this.facebook_description = facebook_description;
     this.createdAt = created_at;
     this.updatedAt = updated_at;
   }
