@@ -33,11 +33,15 @@ class AuthController {
       if (!req.user) return res.redirect('/admin/login?error=Google_Auth_Profile_Not_Found');
       const result = await this.auth.googleLogin(req.user);
       const env = require('../../../config/env');
-      res.redirect(`${env.frontendUrl}/admin/login?token=${result.token}`);
+      const origins = env.frontendUrl.split(',').map(url => url.trim());
+      const redirectBase = origins.find(o => o.includes('aabienes.com')) || origins[0];
+      res.redirect(`${redirectBase}/admin/login?token=${result.token}`);
     } catch (err) {
       console.error('Google callback error:', err);
       const env = require('../../../config/env');
-      res.redirect(`${env.frontendUrl}/admin/login?error=Server_Error`);
+      const origins = env.frontendUrl.split(',').map(url => url.trim());
+      const redirectBase = origins.find(o => o.includes('aabienes.com')) || origins[0];
+      res.redirect(`${redirectBase}/admin/login?error=Server_Error`);
     }
   };
 }

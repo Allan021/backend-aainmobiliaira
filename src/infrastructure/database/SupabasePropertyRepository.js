@@ -5,7 +5,7 @@ class SupabasePropertyRepository extends PropertyRepository {
   async findAll({ dep, pay, status, search, page = 1, limit = 20 } = {}) {
     let query = supabase
       .from('properties')
-      .select('*, lotification:lotifications(id, name)', { count: 'exact' })
+      .select('*, lotification:lotifications(id, name), images:property_images(id, url, public_id, order)', { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (dep) query = query.eq('dep_code', dep);
