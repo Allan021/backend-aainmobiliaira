@@ -30,7 +30,7 @@ class FacebookService {
   }
 
   _buildMessage(property) {
-    const emoji = property.type === 'Casa' ? '🏡' : property.type === 'Comercial' ? '🏢' : '🏗️';
+    const emoji = (property.type === 'Casa' || property.type === 'Propiedad') ? '🏡' : property.type === 'Comercial' ? '🏢' : '🏗️';
     const price = property.price
       ? `L ${Number(property.price).toLocaleString('es-HN')}`
       : null;

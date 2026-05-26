@@ -56,7 +56,7 @@ create table if not exists lotifications (
 create table if not exists properties (
   id uuid primary key default uuid_generate_v4(),
   title text not null,
-  type text not null check (type in ('Terreno', 'Lote', 'Casa', 'Comercial')),
+  type text not null check (type in ('Terreno', 'Lote', 'Casa', 'Comercial', 'Propiedad')),
   municipio text not null,
   departamento text not null,
   dep_code text references departamentos(code),
