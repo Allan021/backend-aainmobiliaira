@@ -6,8 +6,9 @@ class CloudinaryService {
       const stream = cloudinary.uploader.upload_stream(
         {
           folder: options.folder || 'aa-inmobiliaria/properties',
+          format: 'webp',
           transformation: [
-            { width: 1200, height: 900, crop: 'limit', quality: 'auto', format: 'webp' },
+            { width: 1200, height: 900, crop: 'limit', quality: 'auto' },
           ],
           ...options,
         },
