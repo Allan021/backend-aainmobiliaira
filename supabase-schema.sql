@@ -133,3 +133,13 @@ insert into properties (title, type, municipio, departamento, dep_code, price, c
   ('Terreno agrícola en Siguatepeque', 'Terreno', 'Siguatepeque', 'Comayagua', 'CM', 2450000, 'L', '3,800 varas²', '2,651 m²', true, 'Parcela agrícola con suelo fértil, ideal para café o cultivo mixto.', '{Suelo fértil,Quebrada natural,Acceso vehicular,Clima fresco}', 'disponible'),
   ('Terreno comercial · San Pedro Sula', 'Comercial', 'San Pedro Sula', 'Cortés', 'CO', 3800000, 'L', '980 varas²', '683 m²', false, 'Terreno de uso comercial sobre boulevard principal. Alto flujo vehicular.', '{Uso comercial,Sobre boulevard,Licencia vigente,Solo contado}', 'disponible')
 on conflict do nothing;
+
+-- Site settings (single row configuration)
+create table if not exists site_settings (
+  id integer primary key default 1 check (id = 1),
+  whatsapp_phone text not null default '50499383699',
+  updated_at timestamptz default now()
+);
+
+insert into site_settings (id, whatsapp_phone) values (1, '50499383699') on conflict do nothing;
+

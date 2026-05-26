@@ -9,11 +9,13 @@ const SupabaseLeadRepository = require('./infrastructure/database/SupabaseLeadRe
 const SupabaseSaleRepository = require('./infrastructure/database/SupabaseSaleRepository');
 const SupabaseLoteRepository = require('./infrastructure/database/SupabaseLoteRepository');
 const SupabaseUserRepository = require('./infrastructure/database/SupabaseUserRepository');
+const SupabaseSettingsRepository = require('./infrastructure/database/SupabaseSettingsRepository');
 const JwtService = require('./infrastructure/auth/JwtService');
 const PasswordService = require('./infrastructure/auth/PasswordService');
 const CloudinaryService = require('./infrastructure/storage/CloudinaryService');
 const FacebookService = require('./infrastructure/social/FacebookService');
 const passport = require('./infrastructure/auth/PassportConfig');
+const EmailService = require('./infrastructure/email/EmailService');
 
 // Use cases
 const AuthUseCases = require('./domain/use-cases/AuthUseCases');
@@ -21,6 +23,7 @@ const PropertyUseCases = require('./domain/use-cases/PropertyUseCases');
 const LeadUseCases = require('./domain/use-cases/LeadUseCases');
 const SaleUseCases = require('./domain/use-cases/SaleUseCases');
 const LoteUseCases = require('./domain/use-cases/LoteUseCases');
+const SettingsUseCases = require('./domain/use-cases/SettingsUseCases');
 
 // Controllers
 const AuthController = require('./interfaces/http/controllers/AuthController');
@@ -28,6 +31,7 @@ const PropertyController = require('./interfaces/http/controllers/PropertyContro
 const LeadController = require('./interfaces/http/controllers/LeadController');
 const SaleController = require('./interfaces/http/controllers/SaleController');
 const LoteController = require('./interfaces/http/controllers/LoteController');
+const SettingsController = require('./interfaces/http/controllers/SettingsController');
 
 // Routes
 const authRoutes = require('./interfaces/http/routes/auth');
@@ -35,6 +39,7 @@ const propertyRoutes = require('./interfaces/http/routes/properties');
 const leadRoutes = require('./interfaces/http/routes/leads');
 const saleRoutes = require('./interfaces/http/routes/sales');
 const loteRoutes = require('./interfaces/http/routes/lotes');
+const settingsRoutes = require('./interfaces/http/routes/settings');
 
 // --- Wire dependencies ---
 const propertyRepo = new SupabasePropertyRepository();
@@ -42,6 +47,7 @@ const leadRepo = new SupabaseLeadRepository();
 const saleRepo = new SupabaseSaleRepository();
 const loteRepo = new SupabaseLoteRepository();
 const userRepo = new SupabaseUserRepository();
+const settingsRepo = new SupabaseSettingsRepository();
 const jwtService = new JwtService();
 const passwordService = new PasswordService();
 const cloudinaryService = new CloudinaryService();
@@ -51,17 +57,21 @@ const facebookService = env.facebook.pageId && env.facebook.accessToken
 
 if (!facebookService) console.warn('[Facebook] Credentials missing — auto-publish disabled.');
 
-const authUseCases = new AuthUseCases(userRepo, jwtService, passwordService);
+const emailService = new EmailService();
+
+const authUseCases = new AuthUseCases(userRepo, jwtService, passwordService, emailService);
 const propertyUseCases = new PropertyUseCases(propertyRepo, cloudinaryService, facebookService);
 const leadUseCases = new LeadUseCases(leadRepo);
 const saleUseCases = new SaleUseCases(saleRepo);
 const loteUseCases = new LoteUseCases(loteRepo);
+const settingsUseCases = new SettingsUseCases(settingsRepo);
 
 const authController = new AuthController(authUseCases);
 const propertyController = new PropertyController(propertyUseCases);
 const leadController = new LeadController(leadUseCases);
 const saleController = new SaleController(saleUseCases);
 const loteController = new LoteController(loteUseCases);
+const settingsController = new SettingsController(settingsUseCases);
 
 // --- App ---
 const app = express();
@@ -80,6 +90,7 @@ app.use('/api/leads', leadRoutes(leadController));
 app.use('/api/sales', saleRoutes(saleController));
 app.use('/api/lotificaciones/:lotificationId/lotes', loteRoutes(loteController));
 app.use('/api/lotes', loteRoutes(loteController));
+app.use('/api/settings', settingsRoutes(settingsController));
 
 app.use(errorHandler);
 

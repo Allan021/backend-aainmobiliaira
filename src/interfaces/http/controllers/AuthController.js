@@ -44,6 +44,21 @@ class AuthController {
       res.redirect(`${redirectBase}/admin/login?error=Server_Error`);
     }
   };
+
+  listUsers = async (req, res, next) => {
+    try {
+      const users = await this.auth.listUsers();
+      res.json(users);
+    } catch (err) { next(err); }
+  };
+
+  createTeamMember = async (req, res, next) => {
+    try {
+      const { email, password, name } = req.body;
+      const user = await this.auth.createTeamMember(email, password, name);
+      res.status(201).json(user);
+    } catch (err) { next(err); }
+  };
 }
 
 module.exports = AuthController;

@@ -32,6 +32,9 @@ importers:
       multer:
         specifier: ^2.1.1
         version: 2.1.1
+      nodemailer:
+        specifier: ^8.0.8
+        version: 8.0.8
       passport:
         specifier: ^0.7.0
         version: 0.7.0
@@ -328,6 +331,10 @@ packages:
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
+
+  nodemailer@8.0.8:
+    resolution: {integrity: sha512-p+XsnzXGdtIHXUu2ugxdfG+eX2nehsGhMjW9h0CWj1BhE30hrFz0kh0yIM0/VjUgVsRrDj+80ZO+I1nSkGE4tA==}
+    engines: {node: '>=6.0.0'}
 
   oauth@0.10.2:
     resolution: {integrity: sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==}
@@ -790,6 +797,8 @@ snapshots:
       type-is: 1.6.18
 
   negotiator@1.0.0: {}
+
+  nodemailer@8.0.8: {}
 
   oauth@0.10.2: {}
 

@@ -23,6 +23,15 @@ class SupabaseUserRepository extends UserRepository {
     if (error) throw error;
     return data;
   }
+
+  async findAll() {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  }
 }
 
 module.exports = SupabaseUserRepository;
